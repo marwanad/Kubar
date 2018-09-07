@@ -1,17 +1,33 @@
 package kubar
 
 import (
-	"fmt"
+	"flag"
+	"log"
 	"os"
 
 	"github.com/marwanad/kubar/export"
+	"github.com/marwanad/kubar/restore"
 )
 
 func main() {
-	if len(os.Args) != 2 {
-		fmt.Printf("Usage: %s [output directory]\n", os.Args[0])
-		return
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("%v", err)
 	}
-	path := os.Args[1]
-	export.Export(path)
+	path := flag.String("path", dir, "path used for exporting/restoring Kubernetes resources")
+	mode := flag.String("mode", "export", "mode used by Kubar. accepted values: export and restore")
+
+	flag.Parse()
+	switch *mode {
+	case "export":
+		if err := export.Export(*path); err != nil {
+			log.Fatalf("%v", err)
+		}
+	case "restore":
+		if err := restore.Restore(*path); err != nil {
+			log.Fatalf("%v", err)
+		}
+	default:
+		log.Fatalf("%v", "Couldn't recognize the mode provided")
+	}
 }
