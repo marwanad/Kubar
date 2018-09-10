@@ -1,4 +1,4 @@
-package kubar
+package main
 
 import (
 	"flag"
@@ -15,7 +15,7 @@ func main() {
 		log.Fatalf("%v", err)
 	}
 	path := flag.String("path", dir, "path used for exporting/restoring Kubernetes resources")
-	mode := flag.String("mode", "export", "mode used by Kubar. accepted values: export and restore")
+	mode := flag.String("mode", "", "mode used by Kubar. accepted values: export and restore")
 
 	flag.Parse()
 	switch *mode {
